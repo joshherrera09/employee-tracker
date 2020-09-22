@@ -109,8 +109,41 @@ function addRole() {
         ]).then(function(res) {
             connection.query("INSERT INTO role (title, salary, dep_id), VALUES (?, ?, ?)", [res.title, res.salary, res.dep_id], 
             function(err, data) {
+                console.log("Role added");
                 console.table(data);
             })
             init();
         })
+}
+
+function addEmployee() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the employees first name?",
+                name: "firstName"
+            },
+            {
+                type: "input",
+                message: "What is the employees last name?",
+                name: "lastName"
+            },
+            {
+                type: "input",
+                message: "What is the employees role ID?",
+                name: "roleId"
+            },
+            {
+                type: "input",
+                message: "What is the employees managers ID?",
+                name: "managerId"
+            }
+        ]).then(function(res) {
+            connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.roleId, res.managerId],
+            function(err, data) {
+                if (err) throw err;
+                console.log("Employee added");
+            })
+        });
 }
