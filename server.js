@@ -69,3 +69,20 @@ function init() {
             }
         })
 }
+
+function addDepartment() {
+    inquirer
+        .prompt({
+                type: "input",
+                message: "What department would you like to add?",
+                name: "add-department"
+            }).then(function(res) {
+                connection.query(
+                    'INSERT INTO department (name) VALUES (?)', 
+                    [res.name], function(err, res) {
+                        if (err) throw err;
+                        console.log("Department added");
+                        init();
+                })
+            })
+}
