@@ -1,6 +1,7 @@
 // Dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+const cTable = require("console.table");
 
 // Connection to mySql workbench
 var connection = mysql.createConnection({
@@ -85,4 +86,31 @@ function addDepartment() {
                         init();
                 })
             })
+}
+
+function addRole() {
+    inquirer
+        .prompt([
+            {
+            type: "input",
+            message: "Enter the title of the role",
+            name: "title"
+            },
+            {
+                type: "input",
+                message: "What is the salary of the role?",
+                titel: "salary"
+            },
+            {
+                type: "list",
+                message: "What is the department ID?",
+                name: "dep_id"
+            }
+        ]).then(function(res) {
+            connection.query("INSERT INTO role (title, salary, dep_id), VALUES (?, ?, ?)", [res.title, res.salary, res.dep_id], 
+            function(err, data) {
+                console.table(data);
+            })
+            init();
+        })
 }
