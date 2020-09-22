@@ -140,10 +140,36 @@ function addEmployee() {
                 name: "managerId"
             }
         ]).then(function(res) {
-            connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.roleId, res.managerId],
+            connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+            [res.firstName, res.lastName, res.roleId, res.managerId],
             function(err, data) {
                 if (err) throw err;
                 console.log("Employee added");
             })
         });
+}
+
+function viewDepartments() {
+    connection.query("SELECT * FROM department", function(err, data) {
+        if (err) throw err;
+        console.table(data);
+        init();
+    })
+}
+    
+
+function viewRoles() {
+    connection.query("SELECT * FROM role", function(err, data) {
+        if (err) throw err;
+        console.table(data);
+        init();
+    })
+}
+
+function viewEmployees() {
+    connection.query("SELECT * FROM employee", function(err, data) {
+        if (err) throw err;
+        console.table(data);
+        init();
+    })
 }
