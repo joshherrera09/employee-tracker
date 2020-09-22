@@ -79,12 +79,17 @@ function addDepartment() {
                 name: "add-department"
             }).then(function(res) {
                 connection.query(
-                    'INSERT INTO department (name) VALUES (?)', 
-                    [res.name], function(err, res) {
+                    'INSERT INTO department SET ?', 
+                    {
+                        name: res.add-department
+                    },
+                     function(err, res) {
                         if (err) throw err;
-                        console.log("Department added");
+                        connection.query("SELECT * FROM department", function(err, res) {
+                            console.table("Department added");
                         init();
-                })
+                        })        
+                    })
             })
 }
 
@@ -150,26 +155,26 @@ function addEmployee() {
 }
 
 function viewDepartments() {
-    connection.query("SELECT * FROM department", function(err, data) {
+    connection.query("SELECT * FROM department", function(err, res) {
         if (err) throw err;
-        console.table(data);
+        console.table(res);
         init();
     })
 }
     
 
 function viewRoles() {
-    connection.query("SELECT * FROM role", function(err, data) {
+    connection.query("SELECT * FROM role", function(err, res) {
         if (err) throw err;
-        console.table(data);
+        console.table(res);
         init();
     })
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM employee", function(err, data) {
+    connection.query("SELECT * FROM employee", function(err, res) {
         if (err) throw err;
-        console.table(data);
+        console.table(res);
         init();
     })
 }
