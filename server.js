@@ -34,6 +34,7 @@ function init() {
                 "View Departments",
                 "View Roles",
                 "View employees",
+                "Update employee role",
                 "I'm done"
             ],
             name: "todo"
@@ -63,6 +64,10 @@ function init() {
                     viewEmployees();
                     break;
 
+                case "Update employee role":
+                    updateEmployee();
+                    break;
+
                 case "I'm done":
                     connection.end();
                     break;
@@ -76,18 +81,18 @@ function addDepartment() {
         .prompt({
                 type: "input",
                 message: "What department would you like to add?",
-                name: "add-department"
+                name: "addDepartment"
             }).then(function(res) {
                 connection.query(
                     'INSERT INTO department SET ?', 
                     {
-                        name: res.add-department
+                        name: res.addDepartment
                     },
                      function(err, res) {
                         if (err) throw err;
                         connection.query("SELECT * FROM department", function(err, res) {
-                            console.table("Department added");
-                        init();
+                            console.table(res);
+                        viewDepartments();
                         })        
                     })
             })
@@ -97,27 +102,27 @@ function addRole() {
     inquirer
         .prompt([
             {
-            type: "input",
-            message: "Enter the title of the role",
-            name: "title"
+                type: "input",
+                message: "Enter the title of the role",
+                name: "title"
             },
             {
                 type: "input",
                 message: "What is the salary of the role?",
-                titel: "salary"
+                name: "salary"
             },
             {
-                type: "list",
+                type: "input",
                 message: "What is the department ID?",
-                name: "dep_id"
+                name: "dep_id",
             }
         ]).then(function(res) {
-            connection.query("INSERT INTO role (title, salary, dep_id), VALUES (?, ?, ?)", [res.title, res.salary, res.dep_id], 
+            connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [res.title, parseInt(res.salary), parseInt(res.dep_id)], 
             function(err, data) {
+                if (err) throw err;
                 console.log("Role added");
-                console.table(data);
+                viewRoles();
             })
-            init();
         })
 }
 
@@ -150,6 +155,7 @@ function addEmployee() {
             function(err, data) {
                 if (err) throw err;
                 console.log("Employee added");
+                viewEmployees();
             })
         });
 }
@@ -177,4 +183,35 @@ function viewEmployees() {
         console.table(res);
         init();
     })
+}
+
+function updateEmployee() {
+    connection.query("SELECT * FROM employee", function(err, res) {
+        if (err) throw err;
+        var employeeArray = res.map(function(employee) {
+            return employee.first_name + ' ' + employee.last_name
+        });
+
+        inquirer        
+            .prompt([
+                {
+                    type: "list",
+                    message: "Which employee would you like to update?",
+                    name: "employee",
+                    choices: employeeArray
+                },
+                {
+                    type: 'input',
+                    message: "What is the new role ID for the employee?",
+                    name: "roleId"
+                }
+            ]).then(function(res) {
+                var fullName = res.employee.split(" ");
+
+                connection.query(`UPDATE employee SET role_id = ${res.roleId} WHERE (first_name = '${fullName[0]}') AND (last_name = '${fullName[1]}')`, function(err, res) {
+                   if (err) throw err;
+                   viewEmployees();
+                })
+            })
+    })  
 }
