@@ -13,6 +13,9 @@ This application is intended to architect and build a solution for managing a co
 ## Installation
 Must initialize npm with `npm init` in the terminal.  Followed by installing dependencies, `npm i express mysql inquirer`
 ## Usage
+
+[Application Sample Video](https://github.com/joshherrera09/employee-tracker)
+
 Run `node server.js` in the terminal and follow the prompts. The user has the ability to view or add employees, roles and departments, as well as update employee roles.
 ## License
 MIT
